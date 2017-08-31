@@ -17,6 +17,21 @@ class PriorityQueue:
         _, val = heapq.heappop(self.elements)
         return val
 
+    def remove(self, value):
+        index = None
+        for i in range(len(self.elements)):
+            if self.elements[i][1] == value:
+                index = i
+                break
+        if index is None:
+            return
+        lastelt = self.elements.pop()
+        if index == len(self.elements):
+            return
+        if self.elements:
+            self.elements[index] = lastelt
+            heapq._siftup(self.elements, index)
+
     def pushpop(self, val):
         result = self.pop()
         self.push(val)
@@ -24,3 +39,6 @@ class PriorityQueue:
 
     def __len__(self):
         return len(self.elements)
+
+    def __str__(self):
+        return self.elements.__str__()
