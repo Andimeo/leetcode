@@ -28,9 +28,10 @@ class PriorityQueue:
         lastelt = self.elements.pop()
         if index == len(self.elements):
             return
-        if self.elements:
-            self.elements[index] = lastelt
-            heapq._siftup(self.elements, index)
+        self.elements[index] = lastelt
+        heapq._siftup(self.elements, index)
+        # https://stackoverflow.com/questions/10162679/python-delete-element-from-heap
+        heapq._siftdown(self.elements, 0, index)
 
     def pushpop(self, val):
         result = self.pop()
