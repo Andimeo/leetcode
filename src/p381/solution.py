@@ -41,16 +41,3 @@ class RandomizedCollection(object):
         """
         import random
         return self.nums[random.randint(0, len(self.nums) - 1)][0]
-
-
-t = RandomizedCollection()
-t.insert(1)
-t.insert(1)
-t.insert(2)
-t.insert(2)
-t.insert(2)
-t.remove(1)
-t.remove(1)
-t.remove(2)
-t.insert(1)
-t.remove(2)
