@@ -44,13 +44,11 @@ class MaxIntervalTree:
     def remove(self, pos):
         node = self.d[pos]
         self.interval_tree[node].val = 0
-        while True:
+        while node != 0:
             parent = (node - 1) // 2
             self.interval_tree[parent].val = max(self.interval_tree[parent * 2 + 1].val,
                                                  self.interval_tree[parent * 2 + 2].val)
             node = parent
-            if node == 0:
-                break
 
 
 if __name__ == '__main__':
