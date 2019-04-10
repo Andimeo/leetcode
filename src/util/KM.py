@@ -1,4 +1,6 @@
 class KM:
+    INF = 0x7fffffff
+
     def __init__(self, n, graph):
         self.n = n
         self.graph = graph  # adjacent matrix
@@ -33,10 +35,12 @@ class KM:
         for i in range(self.n):
             if self.T[i]:
                 self.Ly[i] += d
+            else:
+                self.slack[i] -= d
 
     def km(self):
         for i in range(self.n):
-            self.slack = [0x7fffffff] * self.n
+            self.slack = [KM.INF] * self.n
             while True:
                 self.S = [False] * self.n
                 self.T = [False] * self.n
@@ -49,24 +53,36 @@ class KM:
 
 # http://codeforces.com/contest/321/problem/B
 if __name__ == '__main__':
-    maxn = 4
+    inf = KM.INF
+    maxn = 500
     graph = []
     for i in range(maxn):
         graph.append([0] * maxn)
-    n, m = [int(x) for x in raw_input().split()]
-    jiro = [raw_input().split() for i in range(n)]
-    ciel = [int(raw_input()) for i in range(m)]
+    n, m = [int(x) for x in input().split()]
+    jiro = [input().split() for i in range(n)]
+    ciel = [int(input()) for i in range(m)]
     for i in range(m):
         for j in range(n):
             if jiro[j][0] == 'ATK':
                 if ciel[i] >= int(jiro[j][1]):
                     graph[i][j] = ciel[i] - int(jiro[j][1])
-    print(graph)
     ans = KM(m, graph).km()
+
     if m > n:
         for i in range(m):
             for j in range(n, m):
                 graph[i][j] = ciel[i]
-        print(graph)
+        for i in range(m):
+            for j in range(n):
+                if jiro[j][0] == 'ATK':
+                    if ciel[i] >= int(jiro[j][1]):
+                        graph[i][j] = ciel[i] - int(jiro[j][1])
+                    else:
+                        graph[i][j] = -inf
+                else:
+                    if ciel[i] > int(jiro[j][1]):
+                        graph[i][j] = 0
+                    else:
+                        graph[i][j] = -inf
         ans = max(ans, KM(m, graph).km())
-    print ans
+    print(ans)
