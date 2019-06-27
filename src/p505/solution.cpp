@@ -5,32 +5,32 @@ using namespace std;
 class Solution {
 public:
   vector<vector<int>> left, right, up, down;
-  vector<vector<bool>> ok;
+  vector<vector<int>> ok;
 
-  void dfs(int x, int y, int dx, int dy) {
-    ok[x][y] = true;
+  void dfs(int x, int y, int dx, int dy, int dis) {
+    ok[x][y] = dis;
     if (x == dx && y == dy) return;
     int ny = left[x][y];
-    if (ny != y && !ok[x][ny])
-      dfs(x, ny, dx, dy);
+    if (ny != y && (ok[x][ny] == -1 || ok[x][ny] > dis + y - ny))
+      dfs(x, ny, dx, dy, dis + y - ny);
     ny = right[x][y];
-    if (ny != y && !ok[x][ny])
-      dfs(x, ny, dx, dy);
+    if (ny != y && (ok[x][ny] == -1 || ok[x][ny] > dis + ny - y))
+      dfs(x, ny, dx, dy, dis + ny - y);
     int nx = up[x][y];
-    if (nx != x && !ok[nx][y])
-      dfs(nx, y, dx, dy);
+    if (nx != x && (ok[nx][y] == -1 || ok[nx][y] > dis + x - nx))
+      dfs(nx, y, dx, dy, dis + x - nx);
     nx = down[x][y];
-    if (nx != x && !ok[nx][y])
-      dfs(nx, y, dx, dy);
+    if (nx != x && (ok[nx][y] == -1 || ok[nx][y] > dis + nx - x))
+      dfs(nx, y, dx, dy, dis + nx - x);
   }
 
-  bool hasPath(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
+  int hasPath(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
     int n = maze.size(), m = maze[0].size();
     left.assign(n, vector<int>(m, 0));
     right.assign(n, vector<int>(m, 0));
     up.assign(n, vector<int>(m, 0));
     down.assign(n, vector<int>(m, 0));
-    ok.assign(n, vector<bool>(m, false));
+    ok.assign(n, vector<int>(m, -1));
     for (int i = 0; i < n ; i++) {
       int one = -1;
       for (int j = 0; j < m ; j++) {
@@ -72,7 +72,7 @@ public:
       }
     }
 
-    dfs(start[0], start[1], destination[0], destination[1]);
+    dfs(start[0], start[1], destination[0], destination[1], 0);
     return ok[destination[0]][destination[1]];
   }
 };
