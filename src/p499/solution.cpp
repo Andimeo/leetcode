@@ -6,25 +6,34 @@ class Solution {
 public:
   vector<vector<int>> left, right, up, down;
   vector<vector<bool>> ok;
+  string res = "";
 
-  void dfs(int x, int y, int dx, int dy) {
+  void dfs(int x, int y, int dx, int dy, string path) {
     ok[x][y] = true;
-    if (x == dx && y == dy) return;
-    int ny = left[x][y];
-    if (!ok[x][ny])
-      dfs(x, ny, dx, dy);
-    ny = right[x][y];
-    if (!ok[x][ny])
-      dfs(x, ny, dx, dy);
-    int nx = up[x][y];
-    if (!ok[nx][y])
-      dfs(nx, y, dx, dy);
+    if (x == dx && y == dy) {
+      if (res == "" || res > path) res = path;
+      return;
+    }
+    int nx, ny;
     nx = down[x][y];
+    if (dx >= x && dx <= nx) nx = dx;
     if (!ok[nx][y])
-      dfs(nx, y, dx, dy);
+      dfs(nx, y, dx, dy, path + "d");
+    ny = left[x][y];
+    if (dy >= ny && dy <= y) ny = dy;
+    if (!ok[x][ny])
+      dfs(x, ny, dx, dy, path + "l");
+    ny = right[x][y];
+    if (dy >= y && dy <= ny) ny = dy;
+    if (!ok[x][ny])
+      dfs(x, ny, dx, dy, path + "r");
+    nx = up[x][y];
+    if (dx >= nx && dx <= x) nx = dx;
+    if (!ok[nx][y])
+      dfs(nx, y, dx, dy, path + "u");
   }
 
-  bool hasPath(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
+  string findShortestWay(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {
     int n = maze.size(), m = maze[0].size();
     left.assign(n, vector<int>(m, 0));
     right.assign(n, vector<int>(m, 0));
@@ -72,23 +81,23 @@ public:
       }
     }
 
-    dfs(start[0], start[1], destination[0], destination[1]);
-    return ok[destination[0]][destination[1]];
+    dfs(start[0], start[1], destination[0], destination[1], "");
+    return ok[destination[0]][destination[1]] ? res : "impossible";
   }
 };
 
 int main(void) {
   vector<vector<int>> s;
-  int a[][5] = {{0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 1, 0}, {1, 1, 0, 1, 1}, {0, 0, 0, 0, 0}};
+  int a[][5] = {{0, 0, 0, 0, 0}, {1, 1, 0, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 1, 0, 0, 0}};
   for (int i = 0 ; i < 5; i++) {
     s.push_back(vector<int>());
     for (int j = 0 ; j < 5; j++)
       s[i].push_back(a[i][j]);
   }
-  vector<int> start{0, 4}, destination{4, 4};
-  //vector<int> start{0, 4}, destination{3, 2};
+  //vector<int> start{4, 3}, destination{0, 1};
+  vector<int> start{4, 3}, destination{3, 0};
   Solution sol;
-  cout << sol.hasPath(s, start, destination) << endl;
+  cout << sol.findShortestWay(s, start, destination) << endl;
 
   
   return 0;

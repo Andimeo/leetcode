@@ -11,16 +11,16 @@ public:
     ok[x][y] = dis;
     if (x == dx && y == dy) return;
     int ny = left[x][y];
-    if (ny != y && (ok[x][ny] == -1 || ok[x][ny] > dis + y - ny))
+    if (ok[x][ny] == -1 || ok[x][ny] > dis + y - ny)
       dfs(x, ny, dx, dy, dis + y - ny);
     ny = right[x][y];
-    if (ny != y && (ok[x][ny] == -1 || ok[x][ny] > dis + ny - y))
+    if (ok[x][ny] == -1 || ok[x][ny] > dis + ny - y)
       dfs(x, ny, dx, dy, dis + ny - y);
     int nx = up[x][y];
-    if (nx != x && (ok[nx][y] == -1 || ok[nx][y] > dis + x - nx))
+    if (ok[nx][y] == -1 || ok[nx][y] > dis + x - nx)
       dfs(nx, y, dx, dy, dis + x - nx);
     nx = down[x][y];
-    if (nx != x && (ok[nx][y] == -1 || ok[nx][y] > dis + nx - x))
+    if (ok[nx][y] == -1 || ok[nx][y] > dis + nx - x)
       dfs(nx, y, dx, dy, dis + nx - x);
   }
 
